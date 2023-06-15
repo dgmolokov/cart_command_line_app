@@ -1,8 +1,8 @@
 package com.example.cart_command_line_app.runner;
 
-import com.example.cart_command_line_app.Cart;
-import com.example.cart_command_line_app.Product;
-import com.example.cart_command_line_app.ProductRepository;
+import com.example.cart_command_line_app.jpa.Cart;
+import com.example.cart_command_line_app.jpa.Product;
+import com.example.cart_command_line_app.jpa.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
@@ -29,21 +29,14 @@ public class Runner implements CommandLineRunner {
   }
 
   private void createSampleProducts() {
-    productRepository.createProduct(new Product(0, "Phone", 40000));
-    productRepository.createProduct(new Product(1, "Notebook", 100000));
-    productRepository.createProduct(new Product(2, "Keyboard", 3000));
-    productRepository.createProduct(new Product(3, "Mouse", 2000));
-    productRepository.createProduct(new Product(4, "Headset", 5000));
-    productRepository.createProduct(new Product(5, "Monitor", 20000));
-    productRepository.createProduct(new Product(6, "CPU", 40000));
-    productRepository.createProduct(new Product(7, "RAM", 5000));
-    productRepository.createProduct(new Product(8, "HDD", 7000));
-    productRepository.createProduct(new Product(9, "SSD", 10000));
+    for (int i = 0; i < 10; i++) {
+      productRepository.createProduct(new Product(i, "Product" + i, 20000));
+    }
   }
 
   private void addFiveRandomProductsToCart(Cart cart) {
     for (int i = 0; i < 5; i++) {
-      cart.addProduct(new Random().nextLong(productRepository.getProducts().size()));
+      cart.addProduct(new Random().nextLong(productRepository.getProductsMap().size()));
     }
   }
 
@@ -77,11 +70,7 @@ public class Runner implements CommandLineRunner {
     for (Map.Entry<Product, Integer> productAndQuantity : cart.getProductsInCartWithQuantity().entrySet()) {
       var product = productAndQuantity.getKey();
       var quantity = productAndQuantity.getValue();
-      System.out.printf("ID: %d, Name: %s, Price: %d - %d items\n",
-        product.getId(),
-        product.getName(),
-        product.getPrice(),
-        quantity);
+      System.out.printf("%d items - %s", quantity, product);
     }
   }
 
@@ -99,7 +88,7 @@ public class Runner implements CommandLineRunner {
 
   private void showAllProducts() {
     for (Product product : productRepository.getProducts()) {
-      System.out.printf("ID: %d, Name: %s, Price: %d\n", product.getId(), product.getName(), product.getPrice());
+      System.out.print(product);
     }
   }
 }
