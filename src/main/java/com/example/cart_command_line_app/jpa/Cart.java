@@ -17,32 +17,28 @@ public class Cart {
   private ProductRepository productRepository;
 
   public Product addProduct(long productId) {
-    var productOptional = productRepository.getProductById(productId);
-    if (productOptional.isPresent()) {
-      var product = productOptional.get();
+    try {
+      var product = productRepository.getProductById(productId);
       productsInCartWithQuantity.computeIfPresent(product, (key, value) -> value + DEFAULT_INCREMENT);
       productsInCartWithQuantity.putIfAbsent(product, DEFAULT_INCREMENT);
       return product;
-    } else {
-      System.out.println("No such product in store!");
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
       return null;
     }
   }
 
-  public Product removeProduct(long productId) {
-    var productOptional = productRepository.getProductById(productId);
-    if (productOptional.isPresent()) {
-      var product = productOptional.get();
+  public void removeProduct(long productId) {
+    try {
+      var product = productRepository.getProductById(productId);
       var quantity = productsInCartWithQuantity.get(product);
       if (quantity == null) {
         System.out.println("This product is not in the cart!");
       } else {
         productsInCartWithQuantity.remove(product);
       }
-      return product;
-    } else {
-      System.out.println("No such product in store!");
-      return null;
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
     }
   }
 }

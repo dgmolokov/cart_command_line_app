@@ -36,7 +36,7 @@ public class Runner implements CommandLineRunner {
 
   private void addFiveRandomProductsToCart(Cart cart) {
     for (int i = 0; i < 5; i++) {
-      cart.addProduct(new Random().nextLong(productRepository.getProductsMap().size()));
+      cart.addProduct(new Random().nextLong(productRepository.getProducts().size()));
     }
   }
 

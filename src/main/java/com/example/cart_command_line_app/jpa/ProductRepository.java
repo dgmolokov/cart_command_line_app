@@ -5,24 +5,21 @@ import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Component
 @AllArgsConstructor
 @Getter
 public class ProductRepository {
-  private final Map<Long, Product> productsMap;
+  private final List<Product> products;
 
   public void createProduct(Product product) {
-    productsMap.put(product.getId(), product);
+    products.add(product);
   }
 
-  public Optional<Product> getProductById(long productId) {
-    return Optional.ofNullable(productsMap.get(productId));
-  }
-
-  public List<Product> getProducts() {
-    return (List<Product>) productsMap.values();
+  public Product getProductById(Long productId) throws IllegalArgumentException {
+    return products.stream().filter(product -> productId.
+      equals(product.getId())).
+      findAny().
+      orElseThrow(() -> new IllegalArgumentException("Object not found!"));
   }
 }
