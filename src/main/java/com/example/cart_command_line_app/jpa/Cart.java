@@ -1,5 +1,7 @@
 package com.example.cart_command_line_app.jpa;
 
+import com.example.cart_command_line_app.exception.ObjectNotFoundException;
+import com.example.cart_command_line_app.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,34 +13,39 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public class Cart {
-  private final int DEFAULT_INCREMENT = 1;
   private Map<Product, Integer> productsInCartWithQuantity;
   @Autowired
-  private ProductRepository productRepository;
+  private ProductService productService;
 
   public Product addProduct(long productId) {
-    try {
-      var product = productRepository.getProductById(productId);
-      productsInCartWithQuantity.computeIfPresent(product, (key, value) -> value + DEFAULT_INCREMENT);
-      productsInCartWithQuantity.putIfAbsent(product, DEFAULT_INCREMENT);
-      return product;
-    } catch (IllegalArgumentException e) {
-      System.out.println(e.getMessage());
-      return null;
-    }
+    var product = productService.getProductById(productId);
+    productsInCartWithQuantity.put(product, 1);
+    return product;
+  }
+
+  public Product addAllProducts(long productId, int quantity) {
+    var product = productService.getProductById(productId);
+    productsInCartWithQuantity.put(product, quantity);
+    return product;
+  }
+
+  public Map<Product, Integer> findAll() {
+    return productsInCartWithQuantity;
+  }
+
+  public Product updateQuantity(long productId, int newQuantity) {
+    var product = productService.getProductById(productId);
+    productsInCartWithQuantity.replace(product, newQuantity);
+    return product;
   }
 
   public void removeProduct(long productId) {
-    try {
-      var product = productRepository.getProductById(productId);
-      var quantity = productsInCartWithQuantity.get(product);
-      if (quantity == null) {
-        System.out.println("This product is not in the cart!");
-      } else {
-        productsInCartWithQuantity.remove(product);
-      }
-    } catch (IllegalArgumentException e) {
-      System.out.println(e.getMessage());
+    var product = productService.getProductById(productId);
+    var quantity = productsInCartWithQuantity.get(product);
+    if (quantity == null) {
+      throw new ObjectNotFoundException(String.format("The product with ID %d is not in the cart!", productId));
+    } else {
+      productsInCartWithQuantity.remove(product);
     }
   }
 }
