@@ -20,13 +20,13 @@ import java.util.stream.IntStream;
 @SpringBootTest(classes = Application.class)
 public class CartTest {
   @Autowired
-  private Cart cart;
+  Cart cart;
 
   @Autowired
-  private ProductRepository productRepository;
+  ProductRepository productRepository;
 
   @Autowired
-  private ProductService productService;
+  ProductService productService;
 
   @BeforeEach
   public void init() {
@@ -39,12 +39,6 @@ public class CartTest {
   }
 
   @Test
-  public void addProductTest() {
-    long productId = 0;
-    Assertions.assertEquals(productService.getProductById(productId), cart.addProduct(productId));
-  }
-
-  @Test
   public void addAllProductsTest() {
     long productId = 0;
     Assertions.assertEquals(productService.getProductById(productId), cart.addAllProducts(productId, 5));
@@ -53,17 +47,8 @@ public class CartTest {
   @Test
   public void updateQuantityTest() {
     long productId = 0;
-    cart.addProduct(productId);
+    cart.addAllProducts(productId, 1);
     Assertions.assertEquals(productService.getProductById(productId), cart.updateQuantity(productId, 5));
-  }
-
-  @Test
-  public void addProductAndFindAllTest() {
-    var productIds = List.of((long) 0, (long) 1);
-    productIds.forEach(productId -> cart.addProduct(productId));
-    var expectedResult = new HashMap<Product, Integer>();
-    productIds.forEach(productId -> expectedResult.put(productService.getProductById(productId), 1));
-    Assertions.assertEquals(expectedResult, cart.findAll());
   }
 
   @Test
@@ -80,7 +65,7 @@ public class CartTest {
   public void updateQuantityAndFindAllTest() {
     long productId = 0;
     int newQuantity = 5;
-    cart.addProduct(productId);
+    cart.addAllProducts(productId, 1);
     var expectedResult = new HashMap<Product, Integer>();
     expectedResult.put(productService.getProductById(productId), newQuantity);
     cart.updateQuantity(productId, newQuantity);
@@ -90,7 +75,7 @@ public class CartTest {
   @Test
   public void removeProductAndFindAllTest() {
     long productId = 0;
-    cart.addProduct(productId);
+    cart.addAllProducts(productId, 1);
     cart.removeProduct(productId);
     Assertions.assertEquals(new HashMap<Product, Integer>(), cart.findAll());
   }

@@ -17,7 +17,7 @@ import java.util.List;
 @SpringBootTest(classes = Application.class)
 public class ProductServiceTest {
   @Autowired
-  private ProductService productService;
+  ProductService productService;
 
   @BeforeEach
   public void init() {

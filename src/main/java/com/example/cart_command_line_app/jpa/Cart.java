@@ -17,12 +17,6 @@ public class Cart {
   @Autowired
   private ProductService productService;
 
-  public Product addProduct(long productId) {
-    var product = productService.getProductById(productId);
-    productsInCartWithQuantity.put(product, 1);
-    return product;
-  }
-
   public Product addAllProducts(long productId, int quantity) {
     var product = productService.getProductById(productId);
     productsInCartWithQuantity.put(product, quantity);
