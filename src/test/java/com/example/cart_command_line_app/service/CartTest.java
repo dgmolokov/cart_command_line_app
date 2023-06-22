@@ -1,6 +1,8 @@
+package com.example.cart_command_line_app.service;
+
 import com.example.cart_command_line_app.Application;
 import com.example.cart_command_line_app.exception.ObjectNotFoundException;
-import com.example.cart_command_line_app.jpa.Cart;
+import com.example.cart_command_line_app.service.Cart;
 import com.example.cart_command_line_app.jpa.Product;
 import com.example.cart_command_line_app.jpa.ProductRepository;
 import com.example.cart_command_line_app.service.DefaultProductService;
@@ -14,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.stream.IntStream;
 
 @SpringBootTest(classes = Application.class)

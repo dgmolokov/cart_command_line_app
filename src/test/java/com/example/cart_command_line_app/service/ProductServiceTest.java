@@ -1,3 +1,5 @@
+package com.example.cart_command_line_app.service;
+
 import com.example.cart_command_line_app.Application;
 import com.example.cart_command_line_app.exception.ObjectNotFoundException;
 import com.example.cart_command_line_app.jpa.Product;
