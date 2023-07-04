@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Homepage</title>
+</head>
+
+<body>
+  <p><a href="/products">Show all products</a></p>
+  <p><a href="/products/create">Create new product</a></p>
+  <p> Get product JSON by ID:
+    <form th:action="@{/products/get/json}">
+      <input type="text" th:name="id">
+      <input type="submit">
+    </form>
+  <p> Get product XML by ID:
+    <form th:action="@{/products/get/xml}">
+      <input type="text" th:name="id">
+      <input type="submit">
+    </form>
+</body>
+</html>

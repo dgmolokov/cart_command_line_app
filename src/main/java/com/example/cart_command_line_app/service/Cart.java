@@ -2,7 +2,6 @@ package com.example.cart_command_line_app.service;
 
 import com.example.cart_command_line_app.exception.ObjectNotFoundException;
 import com.example.cart_command_line_app.jpa.Product;
-import com.example.cart_command_line_app.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
