@@ -67,32 +67,4 @@ public class ProductsControllerTest {
       .andExpect(content().string(containsString("Price: <input type=\"text\" id=\"price\" name=\"price\" value=\"\"/>")))
       .andExpect(content().string(containsString("<button type=\"submit\">Save</button>")));
   }
-
-//  @Test
-//  @DisplayName("GET /products/get/json?id=0")
-//  public void getProductByIdJsonTest() throws Exception {
-//    var product0 = new Product(0, "product0", new BigDecimal(10000));
-//    doReturn(product0).when(productService).getProductById(0);
-//
-//    mockMvc.perform(get("/products/get/json?id=0"))
-//      .andExpect(status().isOk())
-//      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//      .andExpect(jsonPath("$.id", is(0)))
-//      .andExpect(jsonPath("$.name", is("product0")))
-//      .andExpect(jsonPath("$.price", is(10000)));
-//  }
-
-//  @Test
-//  @DisplayName("GET /products/get/xml?id=0")
-//  public void getProductByIdXmlTest() throws Exception {
-//    var product0 = new Product(0, "product0", new BigDecimal(10000));
-//    doReturn(product0).when(productService).getProductById(0);
-//
-//    mockMvc.perform(get("/products/get/xml?id=0"))
-//      .andExpect(status().isOk())
-//      .andExpect(content().contentType(MediaType.APPLICATION_XML))
-//      .andExpect(xpath("/Product/id").string("0"))
-//      .andExpect(xpath("/Product/name").string("product0"))
-//      .andExpect(xpath("/Product/price").string("10000"));
-//  }
 }
