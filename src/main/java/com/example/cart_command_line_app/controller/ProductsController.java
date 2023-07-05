@@ -2,40 +2,39 @@ package com.example.cart_command_line_app.controller;
 
 import com.example.cart_command_line_app.jpa.Product;
 import com.example.cart_command_line_app.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequestMapping("/products")
+@AllArgsConstructor
 public class ProductsController {
-  ProductService productService;
+  private final ProductService productService;
 
-  @Autowired
-  public void setProductService(ProductService productService) {
-    this.productService = productService;
+  @GetMapping(value = "/get_all", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<Product>> getAllProducts() {
+    return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
   }
 
-  @GetMapping
-  public String getAllProducts(Model model) {
-    var products = productService.findAll();
-    model.addAttribute("products", products);
-    return "all_products";
+  @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Product> getProduct(@RequestParam(name = "id") long id) {
+    return new ResponseEntity<>(productService.getProductById(id), HttpStatus.OK);
   }
 
-  @GetMapping("/create")
-  public String getForm(Model model) {
-    Product product = new Product();
-    model.addAttribute("product", product);
-    return "add_product";
+  @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    return new ResponseEntity<>(productService.createProduct(product), HttpStatus.CREATED);
   }
 
-  @PostMapping("/create")
-  public String createProduct(Product product) {
-    productService.createProduct(product);
-    return "add_product";
+  @DeleteMapping("/delete")
+  public ResponseEntity<HttpStatus> deleteProduct(@RequestParam(name = "id") long id) {
+    productService.removeProduct(id);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }

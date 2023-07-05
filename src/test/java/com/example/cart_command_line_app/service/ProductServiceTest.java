@@ -4,8 +4,6 @@ import com.example.cart_command_line_app.Application;
 import com.example.cart_command_line_app.exception.ObjectNotFoundException;
 import com.example.cart_command_line_app.jpa.Product;
 import com.example.cart_command_line_app.jpa.ProductRepository;
-import com.example.cart_command_line_app.service.DefaultProductService;
-import com.example.cart_command_line_app.service.ProductService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

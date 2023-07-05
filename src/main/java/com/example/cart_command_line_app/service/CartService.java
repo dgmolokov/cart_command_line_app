@@ -4,7 +4,6 @@ import com.example.cart_command_line_app.exception.ObjectNotFoundException;
 import com.example.cart_command_line_app.jpa.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -12,10 +11,9 @@ import java.util.Map;
 @Component
 @Getter
 @AllArgsConstructor
-public class Cart {
+public class CartService {
   private Map<Product, Integer> productsInCartWithQuantity;
-  @Autowired
-  private ProductService productService;
+  private final ProductService productService;
 
   public Product addAllProducts(long productId, int quantity) {
     var product = productService.getProductById(productId);
