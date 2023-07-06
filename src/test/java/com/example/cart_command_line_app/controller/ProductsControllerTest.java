@@ -33,13 +33,12 @@ public class ProductsControllerTest {
   ProductService productService;
 
   @Test
-  @DisplayName("GET /product/all")
   public void getAllProducts() {
     var product0 = new Product(0, "product0", new BigDecimal(10000));
     var product1 = new Product(1, "product1", new BigDecimal(20000));
     doReturn(List.of(product0, product1)).when(productService).findAll();
 
-    var mockMvcPerform = Unchecked.supplier(() -> mockMvc.perform(get("/product/all"))
+     Unchecked.supplier(() -> mockMvc.perform(get("/products/all"))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$", hasSize(2)))
       .andExpect(jsonPath("$[0].id", is(0)))
@@ -47,45 +46,39 @@ public class ProductsControllerTest {
       .andExpect(jsonPath("$[0].price", is(10000)))
       .andExpect(jsonPath("$[1].id", is(1)))
       .andExpect(jsonPath("$[1].name", is("product1")))
-      .andExpect(jsonPath("$[1].price", is(20000))));
-    mockMvcPerform.get();
+      .andExpect(jsonPath("$[1].price", is(20000)))).get();
   }
 
   @Test
-  @DisplayName("GET /product?id=0")
   public void getProductById() {
     var product0 = new Product(0, "product0", new BigDecimal(10000));
     doReturn(product0).when(productService).getProductById(0);
 
-    var mockMvcPerform = Unchecked.supplier(() -> mockMvc.perform(get("/product?id=0"))
+    Unchecked.supplier(() -> mockMvc.perform(get("/products?id=0"))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.id", is(0)))
       .andExpect(jsonPath("$.name", is("product0")))
-      .andExpect(jsonPath("$.price", is(10000))));
-    mockMvcPerform.get();
+      .andExpect(jsonPath("$.price", is(10000)))).get();
   }
 
   @Test
-  @DisplayName("POST /product")
   public void createProduct() {
     var product = new Product(0, "product0", new BigDecimal(10000));
     doReturn(product).when(productService).createProduct(product);
 
-    var mockMvcPerform = Unchecked.supplier(() -> mockMvc.perform(post("/product")
+    Unchecked.supplier(() -> mockMvc.perform(post("/products")
         .contentType(MediaType.APPLICATION_JSON)
         .content("{\"id\": 0,\"name\": \"product0\",\"price\": \"10000\"}"))
       .andExpect(status().isCreated())
       .andExpect(jsonPath("$.id", is(0)))
       .andExpect(jsonPath("$.name", is("product0")))
-      .andExpect(jsonPath("$.price", is(10000))));
-    mockMvcPerform.get();
+      .andExpect(jsonPath("$.price", is(10000)))).get();
   }
 
   @Test
-  @DisplayName("DELETE /product?id=0")
   public void deleteProduct() {
     doNothing().when(productService).removeProduct(0L);
-    var mockMvcPerform = Unchecked.supplier(() -> mockMvc.perform(delete("/product?id=0")).andReturn());
+    var mockMvcPerform = Unchecked.supplier(() -> mockMvc.perform(delete("/products?id=0")).andReturn());
     Assertions.assertNotEquals(500, mockMvcPerform.get().getResponse().getStatus());
   }
 }

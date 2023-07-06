@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
 @AllArgsConstructor
 public class ProductsController {
   private final ProductService productService;
@@ -21,7 +21,7 @@ public class ProductsController {
   }
 
   @GetMapping
-  public ResponseEntity<Product> getProduct(@RequestParam(name = "id") long id) {
+  public ResponseEntity<Product> getProduct(@RequestParam long id) {
     return new ResponseEntity<>(productService.getProductById(id), HttpStatus.OK);
   }
 
@@ -31,8 +31,7 @@ public class ProductsController {
   }
 
   @DeleteMapping
-  public ResponseEntity<HttpStatus> deleteProduct(@RequestParam(name = "id") long id) {
+  public void deleteProduct(@RequestParam long id) {
     productService.removeProduct(id);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }
