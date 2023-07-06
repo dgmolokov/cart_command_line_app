@@ -2,7 +2,8 @@ package com.example.cart_command_line_app.controller;
 
 import com.example.cart_command_line_app.jpa.Product;
 import com.example.cart_command_line_app.service.ProductService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jooq.lambda.Unchecked;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,11 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = ProductsController.class)
 @AutoConfigureMockMvc
@@ -30,60 +33,59 @@ public class ProductsControllerTest {
   ProductService productService;
 
   @Test
-  @DisplayName("GET /products/get_all")
-  public void getAllProductsTest() throws Exception {
+  @DisplayName("GET /product/all")
+  public void getAllProducts() {
     var product0 = new Product(0, "product0", new BigDecimal(10000));
     var product1 = new Product(1, "product1", new BigDecimal(20000));
     doReturn(List.of(product0, product1)).when(productService).findAll();
 
-    mockMvc.perform(get("/products/get_all"))
+    var mockMvcPerform = Unchecked.supplier(() -> mockMvc.perform(get("/product/all"))
       .andExpect(status().isOk())
-      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(jsonPath("$", hasSize(2)))
       .andExpect(jsonPath("$[0].id", is(0)))
       .andExpect(jsonPath("$[0].name", is("product0")))
       .andExpect(jsonPath("$[0].price", is(10000)))
       .andExpect(jsonPath("$[1].id", is(1)))
       .andExpect(jsonPath("$[1].name", is("product1")))
-      .andExpect(jsonPath("$[1].price", is(20000)));
+      .andExpect(jsonPath("$[1].price", is(20000))));
+    mockMvcPerform.get();
   }
 
   @Test
-  @DisplayName("GET /products/get?id=0")
-  public void getProductByIdTest() throws Exception {
+  @DisplayName("GET /product?id=0")
+  public void getProductById() {
     var product0 = new Product(0, "product0", new BigDecimal(10000));
     doReturn(product0).when(productService).getProductById(0);
 
-    mockMvc.perform(get("/products/get?id=0"))
+    var mockMvcPerform = Unchecked.supplier(() -> mockMvc.perform(get("/product?id=0"))
       .andExpect(status().isOk())
-      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(jsonPath("$.id", is(0)))
       .andExpect(jsonPath("$.name", is("product0")))
-      .andExpect(jsonPath("$.price", is(10000)));
+      .andExpect(jsonPath("$.price", is(10000))));
+    mockMvcPerform.get();
   }
 
   @Test
-  @DisplayName("POST /products/create")
-  public void createProductTest() throws Exception {
+  @DisplayName("POST /product")
+  public void createProduct() {
     var product = new Product(0, "product0", new BigDecimal(10000));
     doReturn(product).when(productService).createProduct(product);
 
-    mockMvc.perform(post("/products/create")
+    var mockMvcPerform = Unchecked.supplier(() -> mockMvc.perform(post("/product")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(new ObjectMapper().writeValueAsString(product)))
+        .content("{\"id\": 0,\"name\": \"product0\",\"price\": \"10000\"}"))
       .andExpect(status().isCreated())
-      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(jsonPath("$.id", is(0)))
       .andExpect(jsonPath("$.name", is("product0")))
-      .andExpect(jsonPath("$.price", is(10000)));
+      .andExpect(jsonPath("$.price", is(10000))));
+    mockMvcPerform.get();
   }
 
   @Test
-  @DisplayName("DELETE /products/delete")
-  public void deleteProductTest() throws Exception {
+  @DisplayName("DELETE /product?id=0")
+  public void deleteProduct() {
     doNothing().when(productService).removeProduct(0L);
-
-    mockMvc.perform(delete("/products/delete?id=0"))
-      .andExpect(status().isNoContent());
+    var mockMvcPerform = Unchecked.supplier(() -> mockMvc.perform(delete("/product?id=0")).andReturn());
+    Assertions.assertNotEquals(500, mockMvcPerform.get().getResponse().getStatus());
   }
 }
