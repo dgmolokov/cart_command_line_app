@@ -2,14 +2,13 @@ package com.example.cart_command_line_app.service;
 
 import com.example.cart_command_line_app.jpa.Product;
 import com.example.cart_command_line_app.jpa.ProductRepository;
-import com.example.cart_command_line_app.service.ProductService;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class DefaultProductService implements ProductService {
   private final ProductRepository repository;
 
